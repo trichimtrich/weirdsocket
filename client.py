@@ -1,47 +1,38 @@
-#client side
 # echo client
-from socket import *
-from ssl import *
+import socket
+from OpenSSL import SSL
+from hexdump import hexdump
 
-#user is not finnished
-finnished =False
+HOST = "localhost"
+PORT = 9999
+BUFFER_SIZE = 4096
 
-#create socket
-client_socket=socket(AF_INET, SOCK_STREAM)
-# tls_client = wrap_socket(client_socket, ssl_version=PROTOCOL_TLSv1, cert_reqs=CERT_NONE)
-tls_client = wrap_socket(client_socket, ssl_version=PROTOCOL_TLSv1_2, cert_reqs=CERT_NONE)
+ctx = SSL.Context(SSL.SSLv23_METHOD) # latest TLS
+# ctx = SSL.Context(SSL.SSLv2_METHOD) # no protocol
+# ctx = SSL.Context(SSL.SSLv3_METHOD) # no protocol
+# ctx = SSL.Context(SSL.TLSv1_METHOD)
+# ctx = SSL.Context(SSL.TLSv1_1_METHOD)
+# ctx = SSL.Context(SSL.TLSv1_2_METHOD)
 
-#connect to the echo server
-tls_client.connect(('localhost',9999))
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client = SSL.Connection(ctx, socket)
 
-#while not finnished
-while not finnished:
+client.connect((HOST, PORT))
 
-    #message
-    message=input ('enter message:   ')
+while True:
+    message = input("message (quit?): ").encode()
 
-    data_out= message.encode ()
+    if not message:
+        break
 
-    #send data out
-    tls_client.send(data_out)    
+    client.send(message)
 
-    #receive data
-    data_in=tls_client.recv(1024)
+    if message.startswith(b"quit"):
+        print("> Bye!")
+        break
+    else:
+        data = client.recv(BUFFER_SIZE)
+        print("> Recv: {} bytes".format(len(data)))
+        hexdump(data)
 
-
-    #decode message
-    response= data_in.decode()
-    print('Received from client:', response)
-
-    reapet=input('yes or no?  ')
-
-
-    if reapet == 'n':
-        finnished= True
-        client_socket.send(b'quit')
-
-
-
-#close the socket
-client_socket.shutdown(SHUT_RDWR)
-client_socket.close()
+client.close()

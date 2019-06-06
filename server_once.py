@@ -30,8 +30,8 @@ if data.startswith(b"\x16\x03"):
 
     # ssl
     ctx = SSL.Context(SSL.SSLv23_METHOD)
-    ctx.use_privatekey_file("my.key")
-    ctx.use_certificate_file("my.pem")
+    ctx.use_privatekey_file("cert/my.key")
+    ctx.use_certificate_file("cert/my.pem")
     sock = SSL.Connection(ctx, conn)
 
     sock.set_accept_state()

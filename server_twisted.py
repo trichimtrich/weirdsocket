@@ -41,7 +41,7 @@ class Echo(protocol.Protocol):
         self.transport.write(data)
 
 
-cert = ssl.PrivateCertificate.loadPEM(open("my.pem", "rb").read())
+cert = ssl.PrivateCertificate.loadPEM(open("cert/my.pem", "rb").read())
 factory = protocol.Factory.forProtocol(Echo)
 factory.options = cert.options()
 

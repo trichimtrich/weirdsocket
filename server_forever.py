@@ -70,8 +70,8 @@ while inputs:
 
                         # ssl
                         ctx = SSL.Context(SSL.SSLv23_METHOD)
-                        ctx.use_privatekey_file("my.key")
-                        ctx.use_certificate_file("my.pem")
+                        ctx.use_privatekey_file("cert/my.key")
+                        ctx.use_certificate_file("cert/my.pem")
 
                         s2 = SSL.Connection(ctx, s)
                         s2.set_accept_state()

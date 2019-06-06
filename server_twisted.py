@@ -46,4 +46,7 @@ factory = protocol.Factory.forProtocol(Echo)
 factory.options = cert.options()
 
 reactor.listenTCP(PORT, factory, interface=HOST)
+
+print("Server started")
+
 reactor.run()

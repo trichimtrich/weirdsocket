@@ -1,4 +1,5 @@
 # echo server - serve once
+
 import socket
 from hexdump import hexdump
 from OpenSSL import SSL
@@ -39,6 +40,7 @@ if data.startswith(b"\x16\x03"):
     except:
         print(">> Failed to switch ssl")
     else:
+        print(">> Upgraded")
         conn = sock
         is_tls = "[TLS] "
 else:

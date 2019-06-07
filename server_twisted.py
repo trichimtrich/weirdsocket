@@ -3,6 +3,7 @@
 from twisted.internet import protocol, reactor
 from twisted.internet import ssl
 from twisted.internet.threads import deferToThread
+from OpenSSL import crypto
 import socket
 
 HOST = "localhost"
@@ -41,10 +42,13 @@ class Echo(protocol.Protocol):
         self.transport.write(data)
 
 
-cert = ssl.PrivateCertificate.loadPEM(open("cert/my.pem", "rb").read())
+pem_priv = open("cert/my.key", "rb").read()
+pem_cert = open("cert/my.crt", "rb").read()
+
+priv = ssl.KeyPair.load(pem_priv, format=crypto.FILETYPE_PEM)
+cert = ssl.PrivateCertificate.load(pem_cert, priv, format=crypto.FILETYPE_PEM)
 factory = protocol.Factory.forProtocol(Echo)
 factory.options = cert.options()
-
 reactor.listenTCP(PORT, factory, interface=HOST)
 
 print("Server started")

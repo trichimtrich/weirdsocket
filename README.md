@@ -4,13 +4,19 @@ A simple python socket server supports both raw tcp and ssl, simultaneously.
 
 Real implementation of multiple techniques to resolve the problem.
 
-## Why?
+## Why ?
 
 It came up while I was working on other side project (which is pending now 🤐). Although the problem seems super simple (encapsulate TLS around normal socket? or just resume the handshake phase?), but there is no real article related to this situation. Also other open source projects might already have solved in someway, but you will have to spend days to dig into them.
 
 So I would like to amplify it, and share my little work.
 
-But, why are you here? 🙄
+Btw, why are you here? 🙄
+
+## Technical details
+
+```
+... a long time ago in a galaxy far, far away 🖖 ...
+```
 
 ## Dependencies
 
@@ -22,34 +28,54 @@ But, why are you here? 🙄
 
 ## Usage
 
+### Server
+
+Pick your experiment server 👉 `python <file> --help`
+
+- `MSGPEEK` technique include these experiments
 ```
-...
+server_msgpeek_once.py
+server_msgpeek_forever.py
+server_msgpeek_twisted.py
 ```
+
+- Hijack TLS handshake technique
+```
+server_tlslite_once.py
+```
+
+- A demo web service based on 1st technique and twisted framework. Please generate a valid certificate for your wanted hostname (tutorial below), trust its chain - [how?](https://support.portswigger.net/customer/portal/articles/1783075-installing-burp-s-ca-certificate-in-your-browser) - and **DO NOT** forget to change `hosts` file 😁. I already provided a sample hostname `web.weirdsocket.com` as default and a root certificate to trust.
+```
+server_web_twisted.py
+```
+
+### Client
+
+- 👉 `nc localhost 9999`
+
+- 👉 `python client.py --help`
 
 ## Certificate
 
 ```
-> CA
+> Create a self-signed CA
 openssl genrsa -out rootCA.key 4096
 openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
 
-> Key
+> Generate Key for domain
 openssl genrsa -out web.weirdsocket.com.key 4096
 
-> CSR
+> Generate CSR (check out 'san.conf' in cert directory) with SAN extension (Chrome requirement 🤐)
 openssl req -new -out web.weirdsocket.com.csr -key web.weirdsocket.com.key -config san.conf
 
-> Sign
+> Sign with our rootCA (check out 'san.conf' in cert directory)
 openssl x509 -req -days 3650 -in web.weirdsocket.com.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out web.weirdsocket.com.crt -extensions v3_req -extfile san.conf
-
 
 > Debug
 openssl req -text -noout -in web.weirdsocket.com.csr
 openssl x509 -text -noout -in web.weirdsocket.com.crt
 
-
 > Ref
-
 https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309
 http://apetec.com/support/GenerateSAN-CSR.htm
 https://docs.bmc.com/docs/TSCapacity/110/creating-a-request-for-a-ca-signed-certificate-785277999.html

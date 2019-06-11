@@ -12,8 +12,8 @@ import argparse
 argsParser = argparse.ArgumentParser(description="Experiment using twisted framework as webserver and MSGPEEK technique")
 argsParser.add_argument("--host", type=str, help="listen interface", default="localhost")
 argsParser.add_argument("--port", type=int, help="listen port", default=9999)
-argsParser.add_argument("--cert", type=str, help="server certificate", default="cert/my.crt")
-argsParser.add_argument("--key", type=str, help="server private key", default="cert/my.key")
+argsParser.add_argument("--cert", type=str, help="server certificate", default="cert/web.weirdsocket.com.crt")
+argsParser.add_argument("--key", type=str, help="server private key", default="cert/web.weirdsocket.com.key")
 
 args = argsParser.parse_args()
 

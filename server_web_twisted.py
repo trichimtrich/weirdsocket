@@ -63,7 +63,8 @@ class Counter(resource.Resource):
 
     def render_GET(self, request):
         self.numberRequests += 1
-        print("[{}] GET {}".format(request.getClientIP(), request.uri.decode()))
+        addr = request.getClientAddress()
+        print("[{}:{}] GET {}".format(addr.host, addr.port, request.uri.decode()))
         request.setHeader(b"content-type", b"text/plain")
         content = u"I am request #{}\n".format(self.numberRequests)
         return content.encode("ascii")

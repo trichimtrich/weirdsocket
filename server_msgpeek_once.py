@@ -1,4 +1,4 @@
-# echo server - serve once
+# echo server - msgpeek - serve once
 
 import socket
 from hexdump import hexdump

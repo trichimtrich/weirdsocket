@@ -1,4 +1,4 @@
-# echo server - serve forever
+# echo server - msgpeek - serve forever
 
 import socket
 import select

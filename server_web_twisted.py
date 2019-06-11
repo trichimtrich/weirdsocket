@@ -1,4 +1,4 @@
-# web server - twisted - geeky solution, demo only
+# web server - msgpeek - twisted - geeky solution, demo only
 
 from twisted.web import server, resource, http
 from twisted.internet import reactor

@@ -4,11 +4,25 @@ from twisted.web import server, resource, http
 from twisted.internet import reactor
 from twisted.internet import ssl
 from twisted.internet.threads import deferToThread
+from OpenSSL import crypto
 import socket
 
-HOST =  "localhost"
-PORT = 9999
+import argparse
+
+argsParser = argparse.ArgumentParser(description="Experiment using twisted framework as webserver and MSGPEEK technique")
+argsParser.add_argument("--host", type=str, help="listen interface", default="localhost")
+argsParser.add_argument("--port", type=int, help="listen port", default=9999)
+argsParser.add_argument("--cert", type=str, help="server certificate", default="cert/my.crt")
+argsParser.add_argument("--key", type=str, help="server private key", default="cert/my.key")
+
+args = argsParser.parse_args()
+
+HOST = args.host
+PORT = args.port
+CERT = args.cert
+KEY = args.key
 BUFFER_SIZE = 4096
+
 
 class myHTTPChannel(http.HTTPChannel):
     def checkSSLCallback(self, result):
@@ -49,15 +63,22 @@ class Counter(resource.Resource):
 
     def render_GET(self, request):
         self.numberRequests += 1
+        print("[{}] GET {}".format(request.getClientIP(), request.uri.decode()))
         request.setHeader(b"content-type", b"text/plain")
         content = u"I am request #{}\n".format(self.numberRequests)
         return content.encode("ascii")
 
-cert = ssl.PrivateCertificate.loadPEM(open("cert/my.pem", "rb").read())
+
+pem_priv = open(KEY, "rb").read()
+pem_cert = open(CERT, "rb").read()
+priv = ssl.KeyPair.load(pem_priv, format=crypto.FILETYPE_PEM)
+cert = ssl.PrivateCertificate.load(pem_cert, priv, format=crypto.FILETYPE_PEM)
+
 s = server.Site(Counter())
 s.protocol = lambda: http._GenericHTTPChannelProtocol(myHTTPChannel())
 s.options = cert.options()
 
 reactor.listenTCP(PORT, s, interface=HOST)
-print("Server started")
+
+print("Server started at {}:{}".format(HOST, PORT))
 reactor.run()

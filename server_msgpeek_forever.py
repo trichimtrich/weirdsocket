@@ -3,12 +3,23 @@
 import socket
 import select
 import queue
-
 from OpenSSL import SSL
+import argparse
 
-HOST = "localhost"
-PORT = 9999
+argsParser = argparse.ArgumentParser(description="Experiment using pyOpenSSL as wrapper and MSGPEEK technique")
+argsParser.add_argument("--host", type=str, help="listen interface", default="localhost")
+argsParser.add_argument("--port", type=int, help="listen port", default=9999)
+argsParser.add_argument("--cert", type=str, help="server certificate", default="cert/my.crt")
+argsParser.add_argument("--key", type=str, help="server private key", default="cert/my.key")
+
+args = argsParser.parse_args()
+
+HOST = args.host
+PORT = args.port
+CERT = args.cert
+KEY = args.key
 BUFFER_SIZE = 4096
+
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -17,7 +28,7 @@ server.setblocking(0)
 server.bind((HOST, PORT))
 server.listen(5)
 
-print("Server started")
+print("Server started at {}:{}".format(HOST, PORT))
 
 inputs = [server]
 outputs = []
@@ -70,8 +81,8 @@ while inputs:
 
                         # ssl
                         ctx = SSL.Context(SSL.SSLv23_METHOD)
-                        ctx.use_privatekey_file("cert/my.key")
-                        ctx.use_certificate_file("cert/my.pem")
+                        ctx.use_privatekey_file(KEY)
+                        ctx.use_certificate_file(CERT)
 
                         s2 = SSL.Connection(ctx, s)
                         s2.set_accept_state()

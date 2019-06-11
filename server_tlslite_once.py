@@ -8,7 +8,7 @@ import socket
 import argparse
 from hexdump import hexdump
 
-argsParser = argparse.ArgumentParser(description="Experiment using tlslite-ng wrapper")
+argsParser = argparse.ArgumentParser(description="Experiment using tlslite-ng module as wrapper and pure TLS")
 argsParser.add_argument("--host", type=str, help="listen interface", default="localhost")
 argsParser.add_argument("--port", type=int, help="listen port", default=9999)
 argsParser.add_argument("--cert", type=str, help="server certificate", default="cert/my.crt")

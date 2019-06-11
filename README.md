@@ -26,6 +26,35 @@ But, why are you here? 🙄
 ...
 ```
 
+## Certificate
+
+```
+> CA
+openssl genrsa -out rootCA.key 4096
+openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
+
+> Key
+openssl genrsa -out web.weirdsocket.com.key 4096
+
+> CSR
+openssl req -new -out web.weirdsocket.com.csr -key web.weirdsocket.com.key -config san.conf
+
+> Sign
+openssl x509 -req -days 3650 -in web.weirdsocket.com.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out web.weirdsocket.com.crt -extensions v3_req -extfile san.conf
+
+
+> Debug
+openssl req -text -noout -in web.weirdsocket.com.csr
+openssl x509 -text -noout -in web.weirdsocket.com.crt
+
+
+> Ref
+
+https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309
+http://apetec.com/support/GenerateSAN-CSR.htm
+https://docs.bmc.com/docs/TSCapacity/110/creating-a-request-for-a-ca-signed-certificate-785277999.html
+```
+
 ## Disclaimer
 
 all techniques used in this project are implemented at experiment level, do not use in production.

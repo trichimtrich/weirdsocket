@@ -2,3 +2,4 @@ pyopenssl
 twisted
 hexdump
 service_identity
+tlslite-ng

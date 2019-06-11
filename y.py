@@ -32,13 +32,11 @@ class MyRecordSocket(RecordSocket):
         self._amazingData = data
         self._startOfSomethingAmazing = True
 
-    
     def recv(self):
         if self._startOfSomethingAmazing:
-            print("Is that it?")
-            record = RecordHeader3().parse(Parser(self._amazingData))
             self._startOfSomethingAmazing = False
-            yield (record, self._amazingData[5:])
+            record = RecordHeader3().parse(Parser(self._amazingData))
+            return (record, self._amazingData[5:]), 
         else:
             return super().recv()
 

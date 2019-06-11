@@ -1,4 +1,10 @@
 # echo server - serve once
+"""
+- not completed
+- experiments on ssl bio-memory and filedescriptor directive
+- ...
+"""
+
 
 import socket
 from hexdump import hexdump

@@ -62,11 +62,12 @@ class Counter(resource.Resource):
     numberRequests = 0
 
     def render_GET(self, request):
+        print(request.transport.TLS)
         self.numberRequests += 1
         addr = request.getClientAddress()
         print("[{}:{}] GET {}".format(addr.host, addr.port, request.uri.decode()))
         request.setHeader(b"content-type", b"text/plain")
-        content = u"I am request #{}\n".format(self.numberRequests)
+        content = u"I am request #{} in {} channel\n".format(self.numberRequests, "Secure" if request.transport.TLS else "Plain")
         return content.encode("ascii")
 
 

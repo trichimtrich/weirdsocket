@@ -51,14 +51,14 @@ server_web_twisted.py
 
 ### Client
 
-- 👉 `nc localhost 9999`
+- raw 👉 `nc localhost 9999`
 
-- 👉 `python client.py --help`
+- ssl 👉 `python client.py --help`
 
 ## Certificate
 
 ```
-> Create a self-signed CA
+> Create a self-signed root CA
 openssl genrsa -out rootCA.key 4096
 openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
 
@@ -75,11 +75,16 @@ openssl x509 -req -days 3650 -in web.weirdsocket.com.csr -CA rootCA.crt -CAkey r
 openssl req -text -noout -in web.weirdsocket.com.csr
 openssl x509 -text -noout -in web.weirdsocket.com.crt
 
-> Ref
-https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309
-http://apetec.com/support/GenerateSAN-CSR.htm
-https://docs.bmc.com/docs/TSCapacity/110/creating-a-request-for-a-ca-signed-certificate-785277999.html
+> Note
+- Because the chain has only 2 nodes, so no need to create fullchain
+- SAN is required by Chrome to trust the certificate, so if you don't want to mess with it just create/sign a certficate with CommonName (CN) == your donmain name. Ref below.
 ```
+
+Ref
+- https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309
+- http://apetec.com/support/GenerateSAN-CSR.htm
+- https://docs.bmc.com/docs/TSCapacity/110/creating-a-request-for-a-ca-signed-certificate-785277999.html
+ 
 
 ## Disclaimer
 

@@ -14,9 +14,7 @@ Btw, why are you here? 🙄
 
 ## Technical details
 
-```
-... a long time ago in a galaxy far, far away 🖖 ... there is an [article](https://blog.trich.im/project/2019/weirdsocket/)
-```
+> ... a long time ago in a galaxy far, far away 🖖 ... there is an [article](https://blog.trich.im/project/2019/weirdsocket/)
 
 ## Dependencies
 
